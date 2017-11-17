@@ -1,0 +1,55 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  },
+  "extends": "airbnb",
+  "plugins": [
+    "jsx-a11y"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-const-assign": "error",
+    "no-this-before-super": "error",
+    "no-undef": "error",
+    "no-unreachable": "error",
+    "no-unused-vars": "warn",
+    "constructor-super": "warn",
+    "valid-typeof": "warn",
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ],
+    "import/no-extraneous-dependencies": [
+      "off"
+    ],
+    "import/no-unresolved": [0],
+    "no-debugger":"warn",
+    "no-unused-expressions":"warn",
+    "import/extensions":[0],
+    "max-len":[2,150],
+    "react/prop-types":[2],
+    "import/prefer-default-export":[0],
+    "global-require":[0],
+    "no-underscore-dangle":[0],
+    "react/prefer-stateless-function":[1],
+    "import/no-webpack-loader-syntax":[1],
+    "import/no-dynamic-require":[1],
+    "semi": ["error", "never"],
+    "class-methods-use-this":[1],
+    "jsx-a11y/no-static-element-interactions":[1]
+  }
+}
