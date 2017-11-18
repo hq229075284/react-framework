@@ -1,15 +1,15 @@
 /*
  * @Author: huixie
  * @Date: 2017-07-25 11:18:33
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2017-11-17 13:21:45
+ * @Last Modified by: 韩卿
+ * @Last Modified time: 2017-11-18 22:27:11
  */
 
 // 记录日志
 const logger = store => next => (action) => {
-  console.log('dispatching', action)
+  // console.log('dispatching', action)
   const result = next(action)
-  console.log('next state', store.getState())
+  // console.log('next state', store.getState())
   return result
 }
 

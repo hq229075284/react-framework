@@ -7,6 +7,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 var ManifestPlugin = require('webpack-manifest-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var devConfig = {
   plugins: [
@@ -72,7 +73,10 @@ var devConfig = {
         "start_url": "index.html?launcher=true"
       }
     }),
-    new webpack.optimize.ModuleConcatenationPlugin()
+    new webpack.optimize.ModuleConcatenationPlugin(),
+    new CopyWebpackPlugin([
+      { from: './src/static', to: './static' }
+    ])
   ],
   devtool: 'hidden-source-map',
 };

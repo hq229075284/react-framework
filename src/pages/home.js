@@ -6,7 +6,7 @@ import { } from 'antd'
 
 // @connect((storeState)=>({}))
 
-export default class <%请取名字%> extends Component {
+export default class Home extends Component {
   static defaultProps={
   }
 
@@ -18,27 +18,27 @@ export default class <%请取名字%> extends Component {
     this.state = {}
   }
 
-  componentWillMount() {}
+  componentWillMount() { alert('Home') }
 
   componentDidMount() {}
-  
+
   componentWillReceiveProps() {}
-  
+
   componentWillUpdate() {}
-  
+
   componentDidUpdate() {}
-  
+
   componentWillUnmount() {}
 
   // region vscode 1.17的收缩代码块功能  业务代码
 
   /* somehandle */
-  
+
   // endregion
 
   render() {
     return (
-      <div className="" />
+      <div className="" >Home</div>
     )
   }
 }

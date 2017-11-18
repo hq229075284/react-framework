@@ -2,11 +2,15 @@
  * @Author: 韩卿
  * @Date: 2017-11-17 18:36:26
  * @Last Modified by: 韩卿
- * @Last Modified time: 2017-11-18 04:55:58
+ * @Last Modified time: 2017-11-18 22:34:36
  */
 
 import axios from 'axios'
 import * as ajaxConfig from '@config/ajaxConfig'
+import { message } from 'antd'
+import { loginOut } from './common'
+
+const { CancelToken } = axios
 
 let baseConfig = {
   // `url` is the server URL that will be used for the request
@@ -105,13 +109,59 @@ let baseConfig = {
 
 baseConfig = { ...baseConfig, ...ajaxConfig }
 
-export const fetchByPost = (url) => {
+
+export const fetchByPost = (api) => {
   // 当url参数为createApi创建的返回值
-  if (typeof url === 'function') return url
-  return (data, config) => axios({ ...baseConfig, ...config, url, data })
+  if (typeof api === 'function') return api
+  return (data, config) => axios({ ...baseConfig, ...config, url: api, data })
     .then(response => response.data)
     .catch((e) => { throw new Error(e) })
 }
+
+export const oftenFetchByPost = (api) => {
+  // 当url参数为createApi创建的返回值
+  if (typeof api === 'function') return api
+  return (...rest) => { // 参数:(data:Object,sucess?:Function,failure?:Function,config?:Object)
+    // 参数分析
+    const data = rest[0]
+    if (!data) { throw new Error('请求参数必须传入') }
+    const success = typeof rest[1] === 'function' ? rest[1] : null
+    const failure = typeof rest[2] === 'function' ? rest[2] : null
+    /* eslint-disable no-nested-ternary */
+    const config = success ? (failure ? rest[3] : rest[2]) : rest[1]
+    /* eslint-enable no-nested-ternary */
+
+    const hooks = {
+      abort: null,
+    }
+
+    const cancelToken = new CancelToken((c) => { hooks.abort = c })
+    axios({ ...baseConfig, ...config, url: api, data, cancelToken })
+      .then(response => response.data)
+      .then((response) => {
+        switch (response.status) {
+          case 1: { success && success(response); break }
+          case 0: {
+            message.error(response.msg)
+            failure && failure(response)
+            break
+          }
+          default: loginOut()
+        }
+      })
+      .catch((e) => {
+        if (axios.isCancel(e)) {
+          console.log('Request canceled', e.message)
+        } else {
+          throw e
+        }
+      })
+    return hooks
+  }
+}
+
+// 创建发起api的启动器
+export const createApi = api => oftenFetchByPost(`${api}${ajaxConfig._apiSuffix}`)
 
 // export const fetchByGet = url => (data, config) => axios({ ...baseConfig, ...config, url, data, method: 'get' })
 //   .then(response => response.data)

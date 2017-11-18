@@ -20,8 +20,10 @@ http.createServer(function (request, response) {
     var data = typeof (_filter[request.url]) === 'function'
       ? _filter[request.url](originData)
       : originData
-    // 发送响应数据
-    response.end(JSON.stringify({ data: data, status: 3, msg: 'success' }));
+    setTimeout(() => {
+      // 发送响应数据
+      response.end(JSON.stringify({ data: data, status: 1, msg: 'success' }));
+    }, 5000)
   }
 })
   .listen(1111, function () {
