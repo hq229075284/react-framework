@@ -2,11 +2,11 @@
  * @Author: 韩卿
  * @Date: 2017-11-17 18:36:26
  * @Last Modified by: 韩卿
- * @Last Modified time: 2017-11-18 22:34:36
+ * @Last Modified time: 2017-11-19 00:15:25
  */
 
 import axios from 'axios'
-import * as ajaxConfig from '@config/ajaxConfig'
+import * as ajaxConfig from '@config/ajax.config'
 import { message } from 'antd'
 import { loginOut } from './common'
 

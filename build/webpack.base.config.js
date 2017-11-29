@@ -2,11 +2,30 @@
  * @Author: 韩卿 
  * @Date: 2017-11-17 18:36:45 
  * @Last Modified by: 韩卿
- * @Last Modified time: 2017-11-18 04:36:42
+ * @Last Modified time: 2017-11-29 21:06:16
  */
 
 var path = require('path');
 var friendlyFormatter = require('eslint-friendly-formatter');
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var needExtract2css = process.env.NODE_ENV === 'production'
+
+var cssLoaderConfig = (appendLoader = []) => {
+  var common = [
+    { loader: 'css', options: { sourceMap: true } },
+    { loader: 'postcss', options: { sourceMap: true } }
+  ]
+  if (needExtract2css) {
+    return ExtractTextPlugin.extract({
+      fallback: 'style',
+      use: common.concat(appendLoader)
+    })
+  } else {
+    common.unshift({ loader: 'style' })
+    return common.concat(appendLoader)
+  }
+}
+
 
 var webpackConfig = {
   entry: {
@@ -14,8 +33,8 @@ var webpackConfig = {
   },
   output: {
     path: path.join(__dirname, '../dist'),
-    filename: '[name].[hash:7].js',
-    chunkFilename: 'chunks/[name].[chunkhash:7].js'
+    filename: '[name].[hash:4].js',
+    chunkFilename: 'chunks/[name].[chunkhash:4].js'
   },
   module: {
     rules: [
@@ -40,33 +59,11 @@ var webpackConfig = {
       }, {
         test: /\.css$/,
         // exclude: /(node_modules|bower_components)/,
-        use: [
-          {
-            loader: 'style-loader'
-          }, {
-            loader: 'css-loader'
-          }, {
-            loader: 'postcss-loader'
-          }
-        ]
+        use: cssLoaderConfig()
       }, {
         test: /\.less$/,
         // exclude: /(node_modules|bower_components)/,
-        use: [
-          {
-            loader: 'style-loader',
-            // options: { sourceMap: true }            
-          }, {
-            loader: 'css-loader',
-            options: { sourceMap: true }
-          }, {
-            loader: 'postcss-loader',
-            options: { sourceMap: true }
-          }, {
-            loader: 'less-loader',
-            options: { sourceMap: true }
-          }
-        ]
+        use: cssLoaderConfig([{ loader: 'less', options: { sourceMap: true } }])
       }, {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url',

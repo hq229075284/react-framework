@@ -8,6 +8,7 @@ var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlug
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 var ManifestPlugin = require('webpack-manifest-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 var devConfig = {
   plugins: [
@@ -45,8 +46,9 @@ var devConfig = {
     new BundleAnalyzerPlugin({
       analyzerPort: 8090
     }),
+    // 打包同步代码中引用的node_modules下的代码
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
+      name: 'common',
       minChunks(module, count) {
         // any required modules inside node_modules are extracted to vendor
         return (
@@ -56,12 +58,25 @@ var devConfig = {
         );
       },
     }),
+    // 打包异步代码中的公共部分
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'asyncCommon',
+      async: 'asyncCommon',
+      minChunks(module, count) {
+        // any required modules inside node_modules are extracted to vendor
+        return (
+          module.resource &&
+          /\.js$/.test(module.resource) && count >= 2
+        );
+      },
+    }),
+    // 提取webpackJsonp公共部分
     // extract webpack runtime and module manifest to its own file in order to
     // prevent vendor hash from being updated whenever app bundle is updated
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: "manifest",
-    //   chunks: ["vendor"]
-    // })
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "manifest",
+      chunks: ['common', 'asyncCommon']
+    }),
     new ManifestPlugin({
       fileName: 'manifest.json',
       basePath: '',
@@ -74,6 +89,7 @@ var devConfig = {
       }
     }),
     new webpack.optimize.ModuleConcatenationPlugin(),
+    new ExtractTextPlugin('style.[hash:4].css'),
     new CopyWebpackPlugin([
       { from: './src/static', to: './static' }
     ])
