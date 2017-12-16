@@ -2,7 +2,7 @@
  * @Author: 韩卿 
  * @Date: 2017-11-17 18:36:45 
  * @Last Modified by: 韩卿
- * @Last Modified time: 2017-11-29 21:06:16
+ * @Last Modified time: 2017-12-16 13:00:08
  */
 
 var path = require('path');
@@ -63,7 +63,15 @@ var webpackConfig = {
       }, {
         test: /\.less$/,
         // exclude: /(node_modules|bower_components)/,
-        use: cssLoaderConfig([{ loader: 'less', options: { sourceMap: true } }])
+        use: cssLoaderConfig([{
+          loader: 'less', options: {
+            sourceMap: true,
+            paths: [
+              path.resolve(__dirname, "../node_modules"),
+              path.resolve(__dirname, "../src/style/test")
+            ]
+          }
+        }])
       }, {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url',
