@@ -2,20 +2,20 @@
  * @Author: 韩卿 
  * @Date: 2017-11-17 18:36:45 
  * @Last Modified by: 韩卿
- * @Last Modified time: 2017-12-16 13:00:08
+ * @Last Modified time: 2017-12-25 17:21:09
  */
 
 var path = require('path');
 var friendlyFormatter = require('eslint-friendly-formatter');
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
-var needExtract2css = process.env.NODE_ENV === 'production'
+var isProduction = process.env.NODE_ENV === 'production'
 
 var cssLoaderConfig = (appendLoader = []) => {
   var common = [
     { loader: 'css', options: { sourceMap: true } },
     { loader: 'postcss', options: { sourceMap: true } }
   ]
-  if (needExtract2css) {
+  if (isProduction) {
     return ExtractTextPlugin.extract({
       fallback: 'style',
       use: common.concat(appendLoader)

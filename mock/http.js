@@ -13,17 +13,25 @@ http.createServer(function (request, response) {
   });
   if (request.method === 'OPTIONS') {
     response.end(null);
-  } else {
-    var originData = _map[request.url]
-      ? Mock.mock(_map[request.url])
-      : ''
-    var data = typeof (_filter[request.url]) === 'function'
-      ? _filter[request.url](originData)
-      : originData
-    setTimeout(() => {
-      // 发送响应数据
-      response.end(JSON.stringify({ data: data, status: 1, msg: 'success' }));
-    }, 5000)
+  }
+  if (request.method === 'POST') {
+    let postData = ''
+    request.addListener('data', (dataBuffer) => postData += dataBuffer)
+    request.addListener('end', () => {
+      postData = JSON.parse(postData)
+      var originData = _map[request.url]
+        ? Mock.mock(_map[request.url])
+        : ''
+      var data = typeof (_filter[request.url]) === 'function'
+        ? _filter[request.url](originData, postData)
+        : originData
+      setTimeout(() => {
+        // 发送响应数据
+        if (data.status === 1) data.msg = 'success'
+        if (data.status === 0) data.msg = 'fail'
+        response.end(JSON.stringify(data));
+      }, 1000)
+    })
   }
 })
   .listen(1111, function () {
