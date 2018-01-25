@@ -2,11 +2,10 @@
  * @Author: 韩卿 
  * @Date: 2017-11-17 18:36:45 
  * @Last Modified by: 韩卿
- * @Last Modified time: 2017-12-25 17:21:09
+ * @Last Modified time: 2018-01-25 17:52:28
  */
 
 var path = require('path');
-var friendlyFormatter = require('eslint-friendly-formatter');
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var isProduction = process.env.NODE_ENV === 'production'
 
@@ -38,19 +37,6 @@ var webpackConfig = {
   },
   module: {
     rules: [
-      {
-        test: /\.(js|jsx)$/,
-        use: [
-          {
-            loader: 'eslint',
-            options: {
-              formatter: friendlyFormatter, // 编译后错误报告格式
-            }
-          }
-        ],
-        enforce: 'pre',
-        include: path.join(__dirname, '../src')
-      },
       {
         test: /\.(js|jsx)$/,
         use: ['babel'],

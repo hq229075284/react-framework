@@ -2,11 +2,29 @@ var path = require('path');
 var webpack = require('webpack');
 var merge = require('webpack-merge');
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
-var webpackBaseConfig = require('./webpack.base.config');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var OpenBrowserPlugin = require('open-browser-webpack-plugin');
+var friendlyFormatter = require('eslint-friendly-formatter');
+var webpackBaseConfig = require('./webpack.base.config');
 
 var devConfig = {
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        use: [
+          {
+            loader: 'eslint',
+            options: {
+              formatter: friendlyFormatter, // 编译后错误报告格式
+            }
+          }
+        ],
+        enforce: 'pre',
+        include: path.join(__dirname, '../src')
+      },
+    ]
+  },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'),
