@@ -7,6 +7,7 @@
     "start": "concurrently \"npm run dev\" \"npm run faker\"",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config ./build/webpack.dev.config.js",
     "build": "cross-env NODE_ENV=production node build/build.js",
+    "build:analyze": "cross-env NODE_ENV=production analyze=true node build/build.js",
     "build:default": "webpack --config ./build/webpack.prod.config.js",
     "faker": "supervisor mock/http.js",
     "lint": "eslint --fix ./src/**/*.js",

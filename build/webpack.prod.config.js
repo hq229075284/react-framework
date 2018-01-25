@@ -9,6 +9,7 @@ var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 var ManifestPlugin = require('webpack-manifest-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var isAnalyze = !!process.env.analyze
 
 var devConfig = {
   plugins: [
@@ -42,9 +43,6 @@ var devConfig = {
         // more options:
         // https://github.com/kangax/html-minifier#options-quick-reference
       },
-    }),
-    new BundleAnalyzerPlugin({
-      analyzerPort: 8090
     }),
     // 打包同步代码中引用的node_modules下的代码
     new webpack.optimize.CommonsChunkPlugin({
@@ -96,5 +94,11 @@ var devConfig = {
   ],
   devtool: 'hidden-source-map',
 };
+
+if (isAnalyze) {
+  devConfig.plugins.push(new BundleAnalyzerPlugin({
+    analyzerPort: 8090
+  }), )
+}
 
 module.exports = merge(webpackBaseConfig, devConfig);
