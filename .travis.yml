@@ -8,3 +8,6 @@ script:
   - npm run build
 node_js:
   - lts/*
+cache:
+  directories:
+    - node_modules
